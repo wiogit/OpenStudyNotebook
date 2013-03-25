@@ -1,7 +1,19 @@
-﻿var macros;
+﻿var notes;
 
 $(document).ready(function() {
   setInterval(checkForButton, 500);
+  $('body').mousemove(event, function() {
+    if (mouse.pressed) {
+      var xchange = event.x - mouse.position.x;
+      var ychange = event.y - mouse.position.y;
+      var xoffset = parseInt($('#notebook-dialog').css('left'));
+      var yoffset = parseInt($('#notebook-dialog').css('top'));
+      $('#notebook-dialog').css('left', (xoffset + xchange) + "px");
+      $('#notebook-dialog').css('top', (yoffset + ychange) + "px");
+      mouse.position.x = event.x;
+      mouse.position.y = event.y;
+    }
+  });
 });
 
 function checkForButton() {
@@ -30,15 +42,15 @@ function openNoteSelector() {
 
 function updateNotebook() {
   console.log('Updating notebook');
-  console.log(macros);
+  console.log(notes);
   var filter = $(this).val().toLowerCase();
   $('ul#notebook-list').children().remove();
-  for (var i = 0; i < macros.length; i++) {
-    if (macros[i].title.toLowerCase().search(filter) != -1 
-        || macros[i].body.toLowerCase().search(filter) != -1) {
+  for (var i = 0; i < notes.length; i++) {
+    if (notes[i].title.toLowerCase().search(filter) != -1 
+        || notes[i].body.toLowerCase().search(filter) != -1) {
       var listitem = $(document.createElement('li'))
         .attr('data-note-id', i)
-        .html(macros[i].title);
+        .html(notes[i].title);
       console.log(listitem);
       $('ul#notebook-list').append(listitem);
     }
@@ -51,19 +63,19 @@ function selectNote() {
   $('ul#notebook-list li').removeClass('note-selected');
   $(this).addClass('note-selected');
   var id = parseInt($(this).attr('data-note-id'), 10);
-  $('#notebook-title').val(macros[id].title);
-  $('#notebook-body').val(macros[id].body);
+  $('#notebook-title').val(notes[id].title);
+  $('#notebook-body').val(notes[id].body);
 }
 
 function newNote() {
-  var id = macros.length;
-  macros.push({
+  var id = notes.length;
+  notes.push({
     title: 'Unnamed Note',
     body: ''
   });
   var listitem = $(document.createElement('li'))
     .attr('data-note-id', id)
-    .html(macros[id].title)
+    .html(notes[id].title)
     .click(selectNote);
   console.log(listitem);
   $('ul#notebook-list').append(listitem);
@@ -74,7 +86,7 @@ function deleteNote() {
   var item = $('ul#notebook-list .note-selected');
   if (item.length > 0) {
     var id = item.attr('data-note-id');
-    macros.splice(id, 1);
+    notes.splice(id, 1);
     saveNotebook();
     $('#notebook-search').trigger('keyup');
   }
@@ -84,7 +96,7 @@ function saveNote() {
   var item = $('ul#notebook-list .note-selected');
   if (item.length > 0) {
     var id = item.attr('data-note-id');
-    macros[id] = {
+    notes[id] = {
       title: $('#notebook-title').val(),
       body: $('#notebook-body').val()
     }
@@ -102,15 +114,15 @@ function insertNote() {
 }
 
 function saveNotebook() {
-  localStorage['macrodb'] = JSON.stringify(macros);
+  localStorage['macrodb'] = JSON.stringify(notes);
 }
 
 function loadNotebook() {
   var data = localStorage['macrodb'];
   if (data) {
-    macros = JSON.parse(data);
+    notes = JSON.parse(data);
   } else {
-    macros = default_macrodb;
+    notes = default_macrodb;
   }
 }
 
@@ -119,7 +131,7 @@ function importNotebook() {
   try {
     var list = JSON.parse(data);
     if (validNotebook(list)) {
-      macros = list;
+      notes = list;
       $('#notebook-search').trigger('keyup');
     } else {
       alert('Imported library was invalid.');
@@ -142,7 +154,7 @@ function validNotebook(list) {
 }
 
 function exportNotebook() {
-  prompt('Copy Library', JSON.stringify(macros));
+  prompt('Copy Library', JSON.stringify(notes));
 }
 
 jQuery.fn.extend({

@@ -8,15 +8,31 @@
   return notebook_button;
 }
 
+var mouse = {
+  pressed: false,
+  position: {
+    x: 0,
+    y: 0
+  }
+}
+
 function createNotebookDialog() {
   var header = $(document.createElement('h3'))
     .css('cursor', 'move')
     .addClass('unselectable')
-    .append('Macro Selector')
+    .append('Insert a Note')
     .append($(document.createElement('button'))
       .addClass('close')
       .html('Close')
-      .click(closeNoteSelector));
+      .click(closeNoteSelector))
+    .mousedown(event, function() {
+      mouse.pressed = true;
+      mouse.position.x = event.x;
+      mouse.position.y = event.y;
+    })
+    .mouseup(function() {
+      mouse.pressed = false;
+    })
   var chooser = $(document.createElement('div'))
     .attr('id', 'notebook-chooser')
     .append($(document.createElement('input'))
