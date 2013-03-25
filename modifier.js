@@ -2,8 +2,8 @@
 var dbtag = 'notebookdb';
 var defaultdb = [
   {
-    title: 'Tutorial', 
-    body: 'I hope you enjoy this macros extension.'
+    title: 'Welcome', 
+    body: 'Thank you for using the openstudy notebook extension.'
   }
 ];
 
@@ -127,10 +127,7 @@ function saveNote() {
 function insertNote() {
   var body = $('#notebook-body').val();
   closeNoteSelector();
-  //$('textarea#reply-body').parent().children('label.placeholder').hide()
-  $('textarea#reply-body').focus();
-  $('textarea#reply-body').insertAtCaret(body);
-  $('textarea#reply-body').blur();
+  $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
 }
 
 function saveNotebook() {
@@ -177,7 +174,7 @@ function exportNotebook() {
   prompt('Copy Library', JSON.stringify(notes));
 }
 
-jQuery.fn.extend({
+$.fn.extend({
   insertAtCaret: function(myValue){
     return this.each(function(i) {
       if (document.selection) {
@@ -200,6 +197,20 @@ jQuery.fn.extend({
         this.value += myValue;
         this.focus();
       }
-    })
+    });
+  },
+  
+  fireEvent: function (event) {
+    return this.each(function(i) {
+      if (document.createEventObject) {
+        var evt = document.createEventObject();
+        return this.fireEvent("on" + event, evt);
+      } else {
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent(event, true, true);
+        return !this.dispatchEvent(evt);
+      }
+    });
+  
   }
 });

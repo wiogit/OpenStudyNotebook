@@ -41,6 +41,7 @@ ul#notebook-list {
 ul#notebook-list li {
   font-size: 12px;
   padding: 3px;
+  white-space: nowrap;
   cursor: hand;
   cursor: pointer;
 }
