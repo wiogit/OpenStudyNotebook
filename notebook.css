@@ -24,7 +24,7 @@
 #notebook-chooser {
   float: left;
   height: 100%;
-  width: 48%;
+  width: 205px;
 }
 
 #notebook-search {
@@ -57,11 +57,11 @@ ul#notebook-list li.note-selected {
 #notebook-editor {
   float: right;
   height: 100%;
-  width: 48%;
+  width: 280px;
 }
 
 #notebook-title {
-  width: 98%;
+  width: 99%;
 }
 #notebook-body {
   height: 80%;

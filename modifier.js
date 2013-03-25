@@ -3,7 +3,7 @@ var dbtag = 'notebookdb';
 var defaultdb = [
   {
     title: 'Welcome', 
-    body: 'Thank you for using the openstudy notebook extension.'
+    body: 'Thank you for using the OpenStudy Notebook extension.'
   }
 ];
 
@@ -30,6 +30,7 @@ $(document).ready(function() {
       var ysize = parseInt($('#notebook-dialog.dialog .dialog-body').css('height'));
       if (xchange < 0 || event.pageX >= $('#notebook-dialog.dialog .resizer').offset().left) {
         $('#notebook-dialog.dialog .dialog-body').css('width', Math.max(xsize + xchange, 500) + "px");
+        $('#notebook-editor').css('width', (Math.max(xsize + xchange, 500) - 220) + "px");
       }
       if (ychange < 0 || event.pageY >= $('#notebook-dialog.dialog .resizer').offset().top) {
         $('#notebook-dialog.dialog .dialog-body').css('height', Math.max(ysize + ychange, 280) + "px");
