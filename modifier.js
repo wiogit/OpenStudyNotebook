@@ -1,4 +1,11 @@
 ﻿var notes;
+var dbtag = 'notebookdb';
+var defaultdb = [
+  {
+    title: 'Tutorial', 
+    body: 'I hope you enjoy this macros extension.'
+  }
+];
 
 $(document).ready(function() {
   setInterval(checkForButton, 500);
@@ -45,23 +52,18 @@ function checkForButton() {
 }
 
 function closeNoteSelector() {
-  console.log('note selector closed');
   $('#notebook-dialog').remove();
   saveNotebook();
 }
 
 function openNoteSelector() {
-  console.log('note selector opened');
   loadNotebook();
   var dialog = createNotebookDialog();
   $('body').append(dialog);
-  console.log(dialog);
   $('#notebook-search').trigger('keyup');
 }
 
 function updateNotebook() {
-  console.log('Updating notebook');
-  console.log(notes);
   var filter = $(this).val().toLowerCase();
   $('ul#notebook-list').children().remove();
   for (var i = 0; i < notes.length; i++) {
@@ -70,7 +72,6 @@ function updateNotebook() {
       var listitem = $(document.createElement('li'))
         .attr('data-note-id', i)
         .html(notes[i].title);
-      console.log(listitem);
       $('ul#notebook-list').append(listitem);
     }
   }
@@ -96,7 +97,6 @@ function newNote() {
     .attr('data-note-id', id)
     .html(notes[id].title)
     .click(selectNote);
-  console.log(listitem);
   $('ul#notebook-list').append(listitem);
   listitem.trigger('click');
 }
@@ -127,21 +127,22 @@ function saveNote() {
 function insertNote() {
   var body = $('#notebook-body').val();
   closeNoteSelector();
-  $('textarea#reply-body').focus().trigger('keydown');
+  //$('textarea#reply-body').parent().children('label.placeholder').hide()
+  $('textarea#reply-body').focus();
   $('textarea#reply-body').insertAtCaret(body);
-  $('textarea#reply-body').trigger('keyup').blur(); // hack to get rid of placeholder
+  $('textarea#reply-body').blur();
 }
 
 function saveNotebook() {
-  localStorage['macrodb'] = JSON.stringify(notes);
+  localStorage[dbtag] = JSON.stringify(notes);
 }
 
 function loadNotebook() {
-  var data = localStorage['macrodb'];
+  var data = localStorage[dbtag];
   if (data) {
     notes = JSON.parse(data);
   } else {
-    notes = default_macrodb;
+    notes = defaultdb;
   }
 }
 
