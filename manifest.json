@@ -15,7 +15,7 @@
     {
       "matches": ["http://openstudy.com/*"],
       "css" : ["openstudy_extended.css", "notebook.css"],
-      "js": ["jquery.js", "dialog.js", "macrodb.js", "modifier.js"]
+      "js": ["jquery.js", "dialog.js", "modifier.js"]
     }
   ]
 }
