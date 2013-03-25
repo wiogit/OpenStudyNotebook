@@ -2,14 +2,31 @@
 
 $(document).ready(function() {
   setInterval(checkForButton, 500);
+  $('body').mouseup(event, function() {
+    mouse.move = false;
+    mouse.resize = false;
+  });
   $('body').mousemove(event, function() {
-    if (mouse.pressed) {
+    if (mouse.move) {
       var xchange = event.x - mouse.position.x;
       var ychange = event.y - mouse.position.y;
       var xoffset = parseInt($('#notebook-dialog').css('left'));
       var yoffset = parseInt($('#notebook-dialog').css('top'));
       $('#notebook-dialog').css('left', (xoffset + xchange) + "px");
       $('#notebook-dialog').css('top', (yoffset + ychange) + "px");
+      mouse.position.x = event.x;
+      mouse.position.y = event.y;
+    } else if (mouse.resize) {
+      var xchange = event.x - mouse.position.x;
+      var ychange = event.y - mouse.position.y;
+      var xsize = parseInt($('#notebook-dialog.dialog .dialog-body').css('width'));
+      var ysize = parseInt($('#notebook-dialog.dialog .dialog-body').css('height'));
+      if (xchange < 0 || event.pageX >= $('#notebook-dialog.dialog .resizer').offset().left) {
+        $('#notebook-dialog.dialog .dialog-body').css('width', Math.max(xsize + xchange, 500) + "px");
+      }
+      if (ychange < 0 || event.pageY >= $('#notebook-dialog.dialog .resizer').offset().top) {
+        $('#notebook-dialog.dialog .dialog-body').css('height', Math.max(ysize + ychange, 280) + "px");
+      }
       mouse.position.x = event.x;
       mouse.position.y = event.y;
     }
@@ -22,6 +39,8 @@ function checkForButton() {
     if ($('#notebook-button').length == 0) {
       element.after(createNotbookButton());
     }
+  } else if ($('#notebook-dialog').length > 0) {
+    closeNoteSelector();
   }
 }
 

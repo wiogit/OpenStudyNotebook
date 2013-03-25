@@ -1,4 +1,13 @@
-﻿function createNotbookButton() {
+﻿var mouse = {
+  move: false,
+  resize: false,
+  position: {
+    x: 0,
+    y: 0
+  }
+}
+
+function createNotbookButton() {
   var notebook_button = $(document.createElement('button'))
     .attr('id', 'notebook-button')
     .attr('tabindex', '8')
@@ -6,14 +15,6 @@
     .html('Notebook')
     .click(openNoteSelector);
   return notebook_button;
-}
-
-var mouse = {
-  pressed: false,
-  position: {
-    x: 0,
-    y: 0
-  }
 }
 
 function createNotebookDialog() {
@@ -26,12 +27,9 @@ function createNotebookDialog() {
       .html('Close')
       .click(closeNoteSelector))
     .mousedown(event, function() {
-      mouse.pressed = true;
+      mouse.move = true;
       mouse.position.x = event.x;
       mouse.position.y = event.y;
-    })
-    .mouseup(function() {
-      mouse.pressed = false;
     })
   var chooser = $(document.createElement('div'))
     .attr('id', 'notebook-chooser')
@@ -44,11 +42,11 @@ function createNotebookDialog() {
       .attr('id', 'notebook-list'))
     .append($(document.createElement('button'))
       .addClass('notebook-button notebook-import')
-      .html('Import Notebook')
+      .html('Import Notes')
       .click(importNotebook))
     .append($(document.createElement('button'))
       .addClass('notebook-button notebook-export')
-      .html('Export Notebook')
+      .html('Export Notes')
       .click(exportNotebook))
   var editor = $(document.createElement('div'))
     .attr('id', 'notebook-editor')
@@ -86,6 +84,11 @@ function createNotebookDialog() {
     .append(header)
     .append(body)
     .append($(document.createElement('div'))
-      .addClass('resizer bottom-right'));
+      .addClass('resizer bottom-right')
+      .mousedown(event, function() {
+        mouse.resize = true;
+        mouse.position.x = event.x;
+        mouse.position.y = event.y;
+      }));
   return notebook_dialog;
 }

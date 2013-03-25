@@ -4,8 +4,8 @@
 }
 
 #notebook-dialog.dialog .dialog-body {
-  height: 300px;
-  width: 520px;
+  height: 280px;
+  width: 500px;
 }
 #notebook-dialog.dialog button.notebook-button {
   margin: 5px;
@@ -39,6 +39,7 @@ ul#notebook-list {
 }
 
 ul#notebook-list li {
+  font-size: 12px;
   padding: 3px;
   cursor: hand;
   cursor: pointer;
