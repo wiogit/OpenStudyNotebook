@@ -4,7 +4,13 @@
   "name": "Open Study Notebook",
   "description": "Load and store notes (e.g. formula, theorems) on Open Study",
   "version": "1.0",
-
+  
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png" 
+  },
+  
   "content_scripts": [
     {
       "matches": ["http://openstudy.com/*"],
