@@ -1,0 +1,15 @@
+﻿{
+  "manifest_version": 2,
+  
+  "name": "Open Study Notebook",
+  "description": "Load and store notes (e.g. formula, theorems) on Open Study",
+  "version": "1.0",
+
+  "content_scripts": [
+    {
+      "matches": ["http://openstudy.com/*"],
+      "css" : ["openstudy_extended.css", "notebook.css"],
+      "js": ["jquery.js", "dialog.js", "macrodb.js", "macro_button.js"]
+    }
+  ]
+}
