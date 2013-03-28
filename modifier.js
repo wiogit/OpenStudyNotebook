@@ -122,7 +122,8 @@ function saveNote() {
       title: $('#notebook-title').val(),
       body: $('#notebook-body').val()
     }
-    saveNotebook();
+    notes.sort(compareNote);
+    //saveNotebook();
     $('ul#notebook-list .note-selected').html($('#notebook-title').val());
   }
 }
@@ -146,7 +147,7 @@ function saveNotebook() {
 function loadNotebook() {
   var data = localStorage[dbtag];
   if (data) {
-    notes = JSON.parse(data);
+    notes = JSON.parse(data).sort(compareNote);
   } else {
     notes = defaultdb;
   }
@@ -157,7 +158,7 @@ function importNotebook() {
   try {
     var list = JSON.parse(data);
     if (validNotebook(list)) {
-      notes = list;
+      notes = list.sort(compareNote);
       $('#notebook-search').trigger('keyup');
     } else {
       alert('Imported library was invalid.');
@@ -197,6 +198,10 @@ function variableReplace(text, noprompt) {
     }
     text = text.replace(esc_regex, '($1?');
     return text;
+}
+
+function compareNote(note1, note2) {
+  return note1.title.localeCompare(note2.title);
 }
 
 $.fn.extend({
