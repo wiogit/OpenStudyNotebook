@@ -1,48 +1,46 @@
-﻿function Notebook(tag) {
-  this.tag = tag;
-  this.notes = [];
+﻿function saveNotebook() {
+  localStorage[dbtag] = JSON.stringify(notes);
 }
-Notebook.prototype = {
-  getNote: function(i) {
-    return this.notes[i];
+
+function loadNotebook() {
+  var data = localStorage[dbtag];
+  if (data) {
+    notes = JSON.parse(data).sort(compareNote);
+  } else {
+    notes = defaultdb;
   }
-  save: function() {
-    localStorage[this.tag] = JSON.stringify(this.notes);
-  }
-  load: function() {
-    var data = localStorage[this.tag];
-    if (data) {
-      macros = JSON.parse(data);
+}
+
+function importNotebook(data) {
+  try {
+    var list = JSON.parse(data);
+    if (validNotebook(list)) {
+      notes = list.sort(compareNote);
+      $('#notebook-search').trigger('keyup');
     } else {
-      macros = default_macrodb;
+      alert('Imported library was invalid.');
     }
+  } catch(e) {
+    alert('Failed to parse JSON.');
   }
-  importData: function() {
-    var data = prompt('Paste Library Here', '');
-    try {
-      var list = JSON.parse(data);
-      if (this.validateData(list)) {
-        this.notes = list;
-        $('#notebook-search').trigger('keyup');
-      } else {
-        alert('Imported library was invalid.');
-      }
-    } catch(e) {
-      alert('Failed to parse JSON.');
-    }
+}
+
+function validNotebook(list) {
+  if (!(list instanceof Array)) {
+    return false;
   }
-  exportData: function() {
-    prompt('Copy Library', JSON.stringify(macros));
-  }
-  validateData: function(list) {
-    if (!(list instanceof Array)) {
+  for (var i = 0; i < list.length; i++) {
+    if (!list[i].hasOwnProperty('title') || !list[i].hasOwnProperty('body')) {
       return false;
     }
-    for (var i = 0; i < list.length; i++) {
-      if (!list[i].hasOwnProperty('title') || !list[i].hasOwnProperty('body')) {
-        return false;
-      }
-    }
-    return true;
   }
+  return true;
+}
+/*
+function exportNotebook() {
+  prompt('Copy Library', JSON.stringify(notes));
+}
+*/
+function compareNote(note1, note2) {
+  return note1.title.localeCompare(note2.title);
 }

@@ -7,11 +7,12 @@
   height: 280px;
   width: 500px;
 }
+
+#library-dialog.dialog button.notebook-button,
 #notebook-dialog.dialog button.notebook-button {
   margin: 5px;
 }
 
-#notebook-dialog.dialog button.notebook-button.notebook-export,
 #notebook-dialog.dialog button.notebook-button.notebook-insert {
   float: right;
 }
@@ -63,7 +64,23 @@ ul#notebook-list li.note-selected {
 #notebook-title {
   width: 99%;
 }
+
 #notebook-body {
   height: 80%;
+  width: 100%;
+}
+
+#library-dialog.dialog {
+  top: 100px;
+  left: 100px;
+}
+
+#library-dialog.dialog .dialog-body {
+  height: 280px;
+  width: 500px;
+}
+
+#library-data {
+  height: 90%;
   width: 100%;
 }
