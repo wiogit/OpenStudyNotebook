@@ -6,6 +6,8 @@ var defaultdb = [
     body: 'Thank you for using the OpenStudy Notebook extension.'
   }
 ];
+var var_regex = /\(\?(.+?)\)/m;
+var esc_regex = /\(\\(\\*)\?/;
 
 $(document).ready(function() {
   setInterval(checkForButton, 500);
@@ -126,7 +128,13 @@ function saveNote() {
 }
 
 function insertNote() {
-  var body = $('#notebook-body').val();
+  var body = variableReplace($('#notebook-body').val(), false);
+  closeNoteSelector();
+  $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
+}
+
+function qinsertNote() {
+  var body = variableReplace($('#notebook-body').val(), true);
   closeNoteSelector();
   $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
 }
@@ -175,6 +183,22 @@ function exportNotebook() {
   prompt('Copy Library', JSON.stringify(notes));
 }
 
+function variableReplace(text, noprompt) {
+    console.log('text: ' + text);
+    var variables = {};
+    var value = '';
+    var match = var_regex.exec(text);
+    while (match) {
+      if (!variables[match[1]]) {
+        variables[match[1]] = (noprompt) ? match[1] : prompt(match[1]);
+      }
+      text = text.replace(var_regex, variables[match[1]]);
+      match = var_regex.exec(text);
+    }
+    text = text.replace(esc_regex, '($1?');
+    return text;
+}
+
 $.fn.extend({
   insertAtCaret: function(myValue){
     return this.each(function(i) {
@@ -212,6 +236,5 @@ $.fn.extend({
         return !this.dispatchEvent(evt);
       }
     });
-  
   }
 });
