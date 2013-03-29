@@ -49,8 +49,41 @@ function createNotebookButton() {
     .attr('tabindex', '8')
     .attr('type', 'button')
     .html('Notebook')
-    .click(openNoteSelector);
+    .click(openNotebookDialog);
   return notebook_button;
+}
+
+function createCustomButton(html, onclick, right) {
+  var button = $(document.createElement('button'))
+    .addClass('custom-button')
+    .html(html)
+    .click(onclick);
+  if (right) {
+    button.addClass('rbutton');
+  }
+  return button;
+}
+
+function createCustomInput(id, placeholder, onkeyup) {
+  var input = $(document.createElement('input'))
+    .attr('id', id)
+    .attr('type', 'text')
+    .attr('placeholder', placeholder)
+    .keyup(onkeyup)
+  return input;
+}
+
+function createCustomHeader(title, onclose) {
+  var header = $(document.createElement('h3'))
+    .css('cursor', 'move')
+    .addClass('unselectable')
+    .append(title)
+    .append($(document.createElement('button'))
+      .addClass('close')
+      .html('Close')
+      .click(onclose))
+    .mousedown(mouseDown)
+  return header;
 }
 
 function openLibraryDialog() {
@@ -67,105 +100,136 @@ function saveLibrary() {
 }
 
 function createLibraryDialog() {
-  var header = $(document.createElement('h3'))
-    .css('cursor', 'move')
-    .addClass('unselectable')
-    .append('Note Library')
-    .append($(document.createElement('button'))
-      .addClass('close')
-      .html('Close')
-      .click(closeLibraryDialog))
-    .mousedown(mouseDown)
+  var header = createCustomHeader('Note Library', closeLibraryDialog);
   var body = $(document.createElement('div'))
     .addClass('dialog-body')
     .append($(document.createElement('textarea'))
       .attr('id', 'library-data')
       .val(JSON.stringify(notes)))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button library-save')
-      .html('Save Library')
-      .click(saveLibrary))
-  var notebook_dialog = $(document.createElement('div'))
+    .append(createCustomButton('Save Library', saveLibrary, false))
+  var library_dialog = $(document.createElement('div'))
     .attr('id', 'library-dialog')
-    .addClass('dialog with-header')
+    .addClass('custom-dialog dialog with-header')
     .append(header)
     .append(body)
     .append($(document.createElement('div'))
       .addClass('resizer bottom-right')
       .mousedown(mouseDown));
-  return notebook_dialog;
+  return library_dialog;
 }
 
-function openNoteSelector() {
+function openNotebookDialog() {
   loadNotebook();
   var dialog = createNotebookDialog();
   $('body').append(dialog);
   $('#notebook-search').trigger('keyup');
 }
 
-function closeNoteSelector() {
+function closeNotebookDialog() {
   $('#notebook-dialog').remove();
   saveNotebook();
 }
 
+function updateNotebook() {
+  var filter = $(this).val().toLowerCase();
+  $('ul#notebook-list').children().remove();
+  for (var i = 0; i < notes.length; i++) {
+    if (notes[i].title.toLowerCase().search(filter) != -1 
+        || notes[i].body.toLowerCase().search(filter) != -1) {
+      var listitem = $(document.createElement('li'))
+        .attr('data-note-id', i)
+        .html(notes[i].title);
+      $('ul#notebook-list').append(listitem);
+    }
+  }
+  $('ul#notebook-list li').click(selectNote);
+  $('ul#notebook-list :first-child').trigger('click');
+}
+
+function selectNote() {
+  $('ul#notebook-list li').removeClass('note-selected');
+  $(this).addClass('note-selected');
+  var id = parseInt($(this).attr('data-note-id'), 10);
+  $('#notebook-title').val(notes[id].title);
+  $('#notebook-body').val(notes[id].body);
+}
+
+function newNote() {
+  var id = notes.length;
+  notes.push({
+    title: 'Unnamed Note',
+    body: ''
+  });
+  var listitem = $(document.createElement('li'))
+    .attr('data-note-id', id)
+    .html(notes[id].title)
+    .click(selectNote);
+  $('ul#notebook-list').append(listitem);
+  listitem.trigger('click');
+}
+
+function deleteNote() {
+  var item = $('ul#notebook-list .note-selected');
+  if (item.length > 0) {
+    var id = item.attr('data-note-id');
+    notes.splice(id, 1);
+    saveNotebook();
+    $('#notebook-search').trigger('keyup');
+  }
+}
+
+function saveNote() {
+  var item = $('ul#notebook-list .note-selected');
+  if (item.length > 0) {
+    var id = item.attr('data-note-id');
+    notes[id] = {
+      title: $('#notebook-title').val(),
+      body: $('#notebook-body').val()
+    }
+    notes.sort(compareNote);
+    $('ul#notebook-list .note-selected').html($('#notebook-title').val());
+  }
+}
+
+function insertNote() {
+  var body = variableReplace($('#notebook-body').val(), false);
+  closeNoteSelector();
+  $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
+}
+
+function qinsertNote() {
+  var body = variableReplace($('#notebook-body').val(), true);
+  closeNoteSelector();
+  $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
+}
+
 function createNotebookDialog() {
-  var header = $(document.createElement('h3'))
-    .css('cursor', 'move')
-    .addClass('unselectable')
-    .append('Insert a Note')
-    .append($(document.createElement('button'))
-      .addClass('close')
-      .html('Close')
-      .click(closeNoteSelector))
-    .mousedown(mouseDown)
+  var header = createCustomHeader('Insert a Note', closeNotebookDialog);
   var chooser = $(document.createElement('div'))
     .attr('id', 'notebook-chooser')
-    .append($(document.createElement('input'))
-      .attr('id', 'notebook-search')
-      .attr('type', 'text')
-      .attr('placeholder', 'Search')
-      .keyup(updateNotebook))
+    .append(createCustomInput('notebook-search', 'Search', updateNotebook))
     .append($(document.createElement('ul'))
       .attr('id', 'notebook-list'))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button notebook-library')
-      .html('Note Library')
-      .click(openLibraryDialog))
+    .append(createCustomButton('Note Library', openLibraryDialog, false))
   var editor = $(document.createElement('div'))
     .attr('id', 'notebook-editor')
-    .append($(document.createElement('input'))
-      .attr('id', 'notebook-title')
-      .attr('type', 'text')
-      .attr('placeholder', 'Title')
-      .keyup(saveNote))
+    .append(createCustomInput('notebook-title', 'Title', saveNote))
     .append($(document.createElement('br')))
     .append($(document.createElement('textarea'))
       .attr('id', 'notebook-body')
       .keyup(saveNote))
     .append($(document.createElement('br')))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button notebook-new')
-      .html('New')
-      .click(newNote))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button notebook-delete')
-      .html('Delete')
-      .click(deleteNote))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button notebook-insert')
-      .html('Insert')
-      .click(insertNote))
-    .append($(document.createElement('button'))
-      .addClass('notebook-button notebook-insert')
-      .html('Q. Insert')
-      .click(qinsertNote))
+    .append(createCustomButton('New', newNote, false))
+    .append(createCustomButton('Delete', deleteNote, false))
+    .append(createCustomButton('Insert', insertNote, true))
+    .append(createCustomButton('Q. Insert', qinsertNote, true))
   var body = $(document.createElement('div'))
     .addClass('dialog-body')
     .append(chooser)
     .append(editor);
   var notebook_dialog = $(document.createElement('div'))
     .attr('id', 'notebook-dialog')
-    .addClass('dialog with-header')
+    .addClass('custom-dialog dialog with-header')
     .append(header)
     .append(body)
     .append($(document.createElement('div'))

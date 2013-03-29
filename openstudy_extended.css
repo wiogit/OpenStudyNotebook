@@ -1,5 +1,4 @@
-﻿#library-dialog.dialog,
-#notebook-dialog.dialog {
+﻿.custom-dialog.dialog {
   position: fixed;
   width: auto;
   height: auto;
@@ -13,8 +12,7 @@
   box-shadow: rgba(0,0,0,0.5) 0 0 40px;
 }
 
-#library-dialog.dialog .dialog-body,
-#notebook-dialog.dialog .dialog-body {
+.custom-dialog.dialog .dialog-body {
   -moz-border-radius-bottomleft: 3px;
   -webkit-border-bottom-left-radius: 3px;
   -o-border-bottom-left-radius: 3px;
@@ -72,8 +70,7 @@ li.post-reply #notebook-button:hover {
   background-image: linear-gradient(#1eb9ff,#0799e2);
 }
 
-#library-dialog.dialog button.notebook-button,
-#notebook-dialog.dialog button.notebook-button {
+.custom-dialog.dialog button.custom-button {
   float: left;
   color: #fff;
   font-size: 12px;
@@ -100,8 +97,7 @@ li.post-reply #notebook-button:hover {
   position: relative;
 }
 
-#library-dialog.dialog button.notebook-button:hover,
-#notebook-dialog.dialog button.notebook-button:hover {
+.custom-dialog.dialog button.custom-button:hover {
 text-decoration: none;
 background: #1eb9ff;
 background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#1eb9ff),color-stop(100%,#0799e2));

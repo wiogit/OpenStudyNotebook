@@ -1,4 +1,13 @@
-﻿function saveNotebook() {
+﻿var notes;
+var dbtag = 'notebookdb';
+var defaultdb = [
+  {
+    title: 'Welcome', 
+    body: 'Thank you for using the OpenStudy Notebook extension.'
+  }
+];
+
+function saveNotebook() {
   localStorage[dbtag] = JSON.stringify(notes);
 }
 
@@ -36,11 +45,7 @@ function validNotebook(list) {
   }
   return true;
 }
-/*
-function exportNotebook() {
-  prompt('Copy Library', JSON.stringify(notes));
-}
-*/
+
 function compareNote(note1, note2) {
   return note1.title.localeCompare(note2.title);
 }

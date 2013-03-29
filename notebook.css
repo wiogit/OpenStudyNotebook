@@ -8,12 +8,11 @@
   width: 500px;
 }
 
-#library-dialog.dialog button.notebook-button,
-#notebook-dialog.dialog button.notebook-button {
+.custom-dialog.dialog button.custom-button {
   margin: 5px;
 }
 
-#notebook-dialog.dialog button.notebook-button.notebook-insert {
+.custom-dialog.dialog button.custom-button.rbutton {
   float: right;
 }
 
