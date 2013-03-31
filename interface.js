@@ -53,6 +53,13 @@ function createNotebookButton() {
   return notebook_button;
 }
 
+function createListItem(id, title) {
+  return $(document.createElement('li'))
+    .attr('data-note-id', id)
+    .html(title)
+    .click(selectNote);
+}
+
 function createCustomButton(html, onclick, right) {
   var button = $(document.createElement('button'))
     .addClass('custom-button')
@@ -132,17 +139,16 @@ function closeNotebookDialog() {
 
 function updateNotebook() {
   var filter = $(this).val().toLowerCase();
+  if (!notebook_sorted) {
+    notes.sort(compareNote);
+    notebook_sorted = true;
+  }
   $('ul#notebook-list').children().remove();
   for (var i = 0; i < notes.length; i++) {
-    if (notes[i].title.toLowerCase().search(filter) != -1 
-        || notes[i].body.toLowerCase().search(filter) != -1) {
-      var listitem = $(document.createElement('li'))
-        .attr('data-note-id', i)
-        .html(notes[i].title);
-      $('ul#notebook-list').append(listitem);
+    if (matchingNote(notes[i], filter)) {
+      $('ul#notebook-list').append(createListItem(i, notes[i].title));
     }
   }
-  $('ul#notebook-list li').click(selectNote);
   $('ul#notebook-list :first-child').trigger('click');
 }
 
@@ -155,15 +161,9 @@ function selectNote() {
 }
 
 function newNote() {
-  var id = notes.length;
-  notes.push({
-    title: 'Unnamed Note',
-    body: ''
-  });
-  var listitem = $(document.createElement('li'))
-    .attr('data-note-id', id)
-    .html(notes[id].title)
-    .click(selectNote);
+  var id = createNote('Unnamed Note', '');
+  notebook_sorted = false;
+  var listitem = createListItem(id, notes[id].title);
   $('ul#notebook-list').append(listitem);
   listitem.trigger('click');
 }
@@ -178,16 +178,21 @@ function deleteNote() {
   }
 }
 
-function saveNote() {
+function saveNoteTitle() {
   var item = $('ul#notebook-list .note-selected');
   if (item.length > 0) {
     var id = item.attr('data-note-id');
-    notes[id] = {
-      title: $('#notebook-title').val(),
-      body: $('#notebook-body').val()
-    }
-    notes.sort(compareNote);
+    notes[id].title = $('#notebook-title').val().trim();
+    notebook_sorted = false;
     $('ul#notebook-list .note-selected').html($('#notebook-title').val());
+  }
+}
+
+function saveNoteBody() {
+  var item = $('ul#notebook-list .note-selected');
+  if (item.length > 0) {
+    var id = item.attr('data-note-id');
+    notes[id].body = $('#notebook-body').val();
   }
 }
 
@@ -197,7 +202,7 @@ function insertNote() {
   $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
 }
 
-function qinsertNote() {
+function qInsertNote() {
   var body = variableReplace($('#notebook-body').val(), true);
   closeNoteSelector();
   $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
@@ -213,16 +218,16 @@ function createNotebookDialog() {
     .append(createCustomButton('Note Library', openLibraryDialog, false))
   var editor = $(document.createElement('div'))
     .attr('id', 'notebook-editor')
-    .append(createCustomInput('notebook-title', 'Title', saveNote))
+    .append(createCustomInput('notebook-title', 'Title', saveNoteTitle))
     .append($(document.createElement('br')))
     .append($(document.createElement('textarea'))
       .attr('id', 'notebook-body')
-      .keyup(saveNote))
+      .keyup(saveNoteBody))
     .append($(document.createElement('br')))
     .append(createCustomButton('New', newNote, false))
     .append(createCustomButton('Delete', deleteNote, false))
     .append(createCustomButton('Insert', insertNote, true))
-    .append(createCustomButton('Q. Insert', qinsertNote, true))
+    .append(createCustomButton('Q. Insert', qInsertNote, true))
   var body = $(document.createElement('div'))
     .addClass('dialog-body')
     .append(chooser)

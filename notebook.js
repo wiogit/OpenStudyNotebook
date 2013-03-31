@@ -1,4 +1,6 @@
 ﻿var notes;
+var notebook_sorted = false;
+var notebook_changed = false;
 var dbtag = 'notebookdb';
 var defaultdb = [
   {
@@ -6,6 +8,14 @@ var defaultdb = [
     body: 'Thank you for using the OpenStudy Notebook extension.'
   }
 ];
+
+function createNote(title, body) {
+  notes.push({
+    title: title,
+    body: body
+  });
+  return notes.length - 1;
+}
 
 function saveNotebook() {
   localStorage[dbtag] = JSON.stringify(notes);
@@ -24,7 +34,8 @@ function importNotebook(data) {
   try {
     var list = JSON.parse(data);
     if (validNotebook(list)) {
-      notes = list.sort(compareNote);
+      notes = list;
+      notebook_sorted = false;
       $('#notebook-search').trigger('keyup');
     } else {
       alert('Imported library was invalid.');
@@ -48,4 +59,14 @@ function validNotebook(list) {
 
 function compareNote(note1, note2) {
   return note1.title.localeCompare(note2.title);
+}
+
+function matchingNote(note, data) {
+  if (note.title.toLowerCase().search(data) != -1) {
+    return true;
+  }
+  if (note.body.toLowerCase().search(data) != -1) {
+    return true;
+  }
+  return false;
 }
