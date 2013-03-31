@@ -161,7 +161,7 @@ function selectNote() {
   $(this).addClass('note-selected');
   var id = parseInt($(this).attr('data-note-id'), 10);
   $('#notebook-title').val(notes[id].title);
-  $('#notebook-body').val(notes[id].body);
+  $('#notebook-body').val(notes[id].body).scrollTop(0);
 }
 
 function newNote() {

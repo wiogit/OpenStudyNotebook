@@ -58,7 +58,11 @@ function validNotebook(list) {
 }
 
 function compareNote(note1, note2) {
-  return note1.title.localeCompare(note2.title);
+  var cmp = note1.title.localeCompare(note2.title);
+  if (cmp == 0) {
+    cmp = note1.body.localeCompare(note2.body);
+  }
+  return cmp;
 }
 
 function matchingNote(note, data) {
