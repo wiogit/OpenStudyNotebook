@@ -103,6 +103,7 @@ function closeLibraryDialog() {
 
 function saveLibrary() {
   importNotebook($('#library-data').val());
+  notebook_changed = true;
   closeLibraryDialog();
 }
 
@@ -134,7 +135,10 @@ function openNotebookDialog() {
 
 function closeNotebookDialog() {
   $('#notebook-dialog').remove();
-  saveNotebook();
+  if (notebook_changed) {
+    saveNotebook();
+    notebook_changed = false;
+  }
 }
 
 function updateNotebook() {
@@ -163,6 +167,7 @@ function selectNote() {
 function newNote() {
   var id = createNote('Unnamed Note', '');
   notebook_sorted = false;
+  notebook_changed = true;
   var listitem = createListItem(id, notes[id].title);
   $('ul#notebook-list').append(listitem);
   listitem.trigger('click');
@@ -184,6 +189,7 @@ function saveNoteTitle() {
     var id = item.attr('data-note-id');
     notes[id].title = $('#notebook-title').val().trim();
     notebook_sorted = false;
+    notebook_changed = true;
     $('ul#notebook-list .note-selected').html($('#notebook-title').val());
   }
 }
@@ -193,6 +199,7 @@ function saveNoteBody() {
   if (item.length > 0) {
     var id = item.attr('data-note-id');
     notes[id].body = $('#notebook-body').val();
+    notebook_changed = true;
   }
 }
 
