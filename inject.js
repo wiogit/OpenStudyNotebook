@@ -14,7 +14,7 @@ function checkForButton() {
       element.after(createNotebookButton());
     }
   } else if ($('#notebook-dialog').length > 0) {
-    closeNoteSelector();
+    closeNotebookDialog();
   }
 }
 
@@ -25,7 +25,11 @@ function variableReplace(text, noprompt) {
     var match = var_regex.exec(text);
     while (match) {
       if (!variables[match[1]]) {
-        variables[match[1]] = (noprompt) ? match[1] : prompt(match[1]);
+        if (noprompt) {
+          variables[match[1]] = match[1];
+        } else {
+          variables[match[1]] = prompt(match[1]) || match[1];
+        }
       }
       text = text.replace(var_regex, variables[match[1]]);
       match = var_regex.exec(text);

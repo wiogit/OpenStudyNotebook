@@ -205,13 +205,13 @@ function saveNoteBody() {
 
 function insertNote() {
   var body = variableReplace($('#notebook-body').val(), false);
-  closeNoteSelector();
+  closeNotebookDialog();
   $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
 }
 
 function qInsertNote() {
   var body = variableReplace($('#notebook-body').val(), true);
-  closeNoteSelector();
+  closeNotebookDialog();
   $('textarea#reply-body').insertAtCaret(body).fireEvent('keyup');
 }
 
