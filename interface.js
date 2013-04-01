@@ -108,7 +108,8 @@ function saveLibrary() {
 }
 
 function createLibraryDialog() {
-  var header = createCustomHeader('Note Library', closeLibraryDialog);
+  var title = 'Note Library (' + notes.length + ' Notes)';
+  var header = createCustomHeader(title, closeLibraryDialog);
   var body = $(document.createElement('div'))
     .addClass('dialog-body')
     .append($(document.createElement('textarea'))
