@@ -31,43 +31,19 @@
 
 li.post-reply #notebook-button {
   border: 0;
-  background: 0;
+  background: #2db6fa;
   color: #fff;
-  color: #fff;
+  border-radius: 2px;
   font-size: 12px;
-  background: #51c9ff;
-  background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#51c9ff),color-stop(100%,#24b1f8));
-  background-image: -webkit-linear-gradient(#51c9ff,#24b1f8);
-  background-image: -moz-linear-gradient(#51c9ff,#24b1f8);
-  background-image: -o-linear-gradient(#51c9ff,#24b1f8);
-  background-image: -ms-linear-gradient(#51c9ff,#24b1f8);
-  background-image: linear-gradient(#51c9ff,#24b1f8);
-  border: 0;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: rgba(255,255,255,0.3) 1px 1px 1px inset,rgba(0,0,0,0.1) -1px -1px 1px inset;
-  -webkit-box-shadow: rgba(255,255,255,0.3) 1px 1px 1px inset,rgba(0,0,0,0.1) -1px -1px 1px inset;
-  -o-box-shadow: rgba(255,255,255,0.3) 1px 1px 1px inset,rgba(0,0,0,0.1) -1px -1px 1px inset;
-  box-shadow: rgba(255,255,255,0.3) 1px 1px 1px inset,rgba(0,0,0,0.1) -1px -1px 1px inset;
-  cursor: pointer;
-  padding: 3px 10px;
-  position: relative;
-  font-size: inherit;
+  height: 22px;
+  line-height: 12px;
+  font-family: "Lucida Sans","Helvetica Neue",Helvetica,sans-serif;
+  font-weight: normal;
 }
 
 li.post-reply #notebook-button:hover {
-  text-decoration: none;
-  background: #1eb9ff;
-  background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#1eb9ff),color-stop(100%,#0799e2));
-  background-image: -webkit-linear-gradient(#1eb9ff,#0799e2);
-  background-image: -moz-linear-gradient(#1eb9ff,#0799e2);
-  background-image: -o-linear-gradient(#1eb9ff,#0799e2);
-  background-image: -ms-linear-gradient(#1eb9ff,#0799e2);
-  background-image: linear-gradient(#1eb9ff,#0799e2);
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 .custom-dialog.dialog button.custom-button {
